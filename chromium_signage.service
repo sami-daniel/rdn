@@ -1,5 +1,7 @@
 [Unit]
 Description=Chromium Signage Service
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple

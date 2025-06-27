@@ -1,7 +1,12 @@
 #!/bin/bash
+exec 1> >(logger -s -t "$(basename "$0")") 2>&1
 
-PKGS=('ca-certificates' xwayland chromium cage 'wlr-randr' grep 'openssh-client' 'openssh-server' uhubctl)
+set -euo pipefail
+trap 'echo "Error at line $LINENO"; exit 1' ERR
+
+PKGS=('ca-certificates' xwayland chromium cage 'wlr-randr' grep uhubctl)
 SERVICE_FOLDER=~/.config/systemd/user/
+prefix=$(pwd)
 
 echo "Setting up system..."
 
@@ -22,27 +27,23 @@ sudo apt-get full-upgrade -y
 
 echo "Installing required packages for system..."
 (
-set -e
-sudo apt-get remove openssh-client openssh-server
+sudo apt-get install --reinstall openssh-client openssh-server
 sudo apt-get install -y "${PKGS[@]}"
-) > /dev/null
-
-echo "Updating system firmware..."
-sudo rpi-update
+) || { echo "Failed on installation of nescessary packages. Exiting..."; exit 1; }
 
 echo "Configuring permissions for script nescessary scripts..."
-chmod +x ./start_cage
-chmod +x ./start_chromium
+chmod +x "$prefix/start_cage"
+chmod +x "$prefix/start_chromium"
 
 echo "Moving scripts to /usr/bin..."
-sudo mv ./start_chromium /usr/bin/
-sudo mv ./start_cage /usr/bin/
+sudo mv "$prefix/start_chromium" /usr/bin/
+sudo mv "$prefix/start_cage" /usr/bin/
 
 echo "Creating service folder for user..."
 mkdir -p $SERVICE_FOLDER
 
 echo "Moving service file to systemd correctly folder..."
-sudo mv ./chromium_signage.service $SERVICE_FOLDER
+sudo mv "$prefix/chromium_signage.service" $SERVICE_FOLDER
 
 echo "Enabling and starting service for user..."
 
@@ -52,4 +53,4 @@ systemctl --user daemon-reexec
 systemctl --user daemon-reload
 systemctl --user enable chromium_signage.service
 systemctl --user start chromium_signage.service
-) > /dev/null
+) || { echo "Failed on initialization of chromium_signage service. Exiting..."; exit 1; }

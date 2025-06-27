@@ -1,40 +1,32 @@
 #!/bin/bash
+exec 1> >(logger -s -t "$(basename "$0")") 2>&1
 
-$SLEEP_TIME=10
+set -euo pipefail
+trap 'echo "Error at line $LINENO"; exit 1' ERR
+
+SLEEP_TIME=10
+MAX_TRIES=5
 
 echo "After the internet become connected, the USB ports and Ethernet ports will be disabled..."
+
+echo "Ensuring ssh is enabled..."
+sudo systemctl enable --now ssh || { echo "Failed on initialization of SSH. Exiting..."; exit 1; }
 
 while ! ping google.com -c 4 > /dev/null 2>&1; do
     echo "Not connected on internet. Sleeping for 2 seconds..."
     sleep 2
 done
 
-echo "Ensuring ssh is enabled..."
-(
-    sudo systemctl enable ssh
-    sudo systemctl start ssh
-)
-
-if [ $? -ne 0 ]; then
-    echo "Failed to enable or start SSH service. Exiting..."
-    exit 1
-fi
-
+# TODO: Awk parse is fragile, but I'm not sure if all usb ports are the same on PI 3b
 echo "Disabling USB ports and Ethenet ports..."
-sudo uhubctl | awk '/Current status for hub/ {print $5}' | xargs -I {} sudo uhubctl -l {} -p all -a off
+(
+    sudo uhubctl | awk '/Current status for hub/ {print $5}' | xargs -I {} sudo uhubctl -l {} -p all -a off
+) || { echo "Failed on disabling USB and Ethernet ports..."; exit 1; }
 
-for i in {1..5}; do
-    echo "Trying to start cage compositor (graphical server) with chromium..."
-
-    cage start_chromium
-
-    if [ $? -eq 0 ]; then
-        echo "Executed cage with success. Closing it..."
-        exit
-    else
-        echo "Failed on try number $i. Waiting for $SLEEP_TIME before trying again..."
-        sleep $SLEEP_TIME
-    fi
+for ((i=1; i<=$MAX_TRIES; i++)); do
+    cage start_chromium && exit 0
+    sleep $SLEEP_TIME
 done
+echo "Critical failure after $MAX_TRIES attempts" >&2
 
 exit 1

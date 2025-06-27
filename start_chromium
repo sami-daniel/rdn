@@ -1,11 +1,22 @@
 #!/bin/bash
+exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+
+set -euo pipefail
+trap 'echo "Error at line $LINENO"; exit 1' ERR
 
 sleep 5s
 URL=https://ooh.tvsimbrasil.com.br/ooh/current-ads
-OUTPUT=$(wlr-randr | head -n1 | cut -d' ' -f1)
-wlr-randr --output $OUTPUT --transform 90 &
+output=$(wlr-randr | head -n1 | cut -d' ' -f1)
+
+until wlr-randr; do
+    echo "Waiting for display connection..."
+    sleep 1
+done
+wlr-randr --output $output --transform 90 &
+
 sleep 5s
-chromium --kiosk $URL \
+(
+        chromium --kiosk $URL \
         --noerrdialogs \
         --disable-infobars \
         --disable-session-crashed-bubble \
@@ -20,3 +31,4 @@ chromium --kiosk $URL \
         --safebrowsing-disable-auto-update \
         --disable-client-side-phishing-detection \
         --metrics-recording-only
+) || || { echo "Failed on initialization of chromium. Exiting..."; exit 1; }
