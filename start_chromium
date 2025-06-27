@@ -26,9 +26,7 @@ output=$(wlr-randr | head -n1 | cut -d' ' -f1)
 wlr-randr --output $output --transform 90 &
 
 sleep 5s
-(
-        set -e
-        chromium --kiosk $url \
+chromium --kiosk $url \
         --noerrdialogs \
         --disable-infobars \
         --disable-session-crashed-bubble \
@@ -42,5 +40,4 @@ sleep 5s
         --disable-domain-reliability \
         --safebrowsing-disable-auto-update \
         --disable-client-side-phishing-detection \
-        --metrics-recording-only
-) || { echo "Failed on initialization of chromium. Exiting..."; exit 1; }
+        --metrics-recording-only || { echo "Failed on initialization of chromium. Exiting..."; exit 1; }
