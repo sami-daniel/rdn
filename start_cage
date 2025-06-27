@@ -1,8 +1,24 @@
 #!/bin/bash
 
+$SLEEP_TIME=10
+
 while ! ping google.com -c 4 > /dev/null 2>&1; do
     echo "Not connected on internet. Sleeping for 2 seconds..."
     sleep 2
 done
 
-cage start_chromium
+for i in {1..5}; do
+    echo "Trying to start cage compositor (graphical server) with chromium..."
+
+    cage start_chromium
+
+    if [ $? -eq 0 ]; then
+        echo "Executed cage with success. Closing it..."
+        exit
+    else
+        echo "Failed on try number $i. Waiting for $SLEEP_TIME before trying again..."
+        sleep $SLEEP_TIME
+    fi
+done
+
+exit 1

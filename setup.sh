@@ -23,7 +23,7 @@ sudo apt-get full-upgrade -y
 echo "Installing required packages for system..."
 (
 set -e
-sudo apt-get install "$PKGS[@]"
+sudo apt-get install -y "${PKGS[@]}"
 ) > /dev/null
 
 echo "Updating system firmware..."
