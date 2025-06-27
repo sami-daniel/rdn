@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PKGS=('ca-certificates' xwayland chromium cage 'wlr-randr' grep)
+PKGS=('ca-certificates' xwayland chromium cage 'wlr-randr' grep 'openssh-client' 'openssh-server' uhubctl)
 SERVICE_FOLDER=~/.config/systemd/user/
 
 echo "Setting up system..."
@@ -23,6 +23,7 @@ sudo apt-get full-upgrade -y
 echo "Installing required packages for system..."
 (
 set -e
+sudo apt-get remove openssh-client openssh-server
 sudo apt-get install -y "${PKGS[@]}"
 ) > /dev/null
 

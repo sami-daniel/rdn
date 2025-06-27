@@ -2,10 +2,26 @@
 
 $SLEEP_TIME=10
 
+echo "After the internet become connected, the USB ports and Ethernet ports will be disabled..."
+
 while ! ping google.com -c 4 > /dev/null 2>&1; do
     echo "Not connected on internet. Sleeping for 2 seconds..."
     sleep 2
 done
+
+echo "Ensuring ssh is enabled..."
+(
+    sudo systemctl enable ssh
+    sudo systemctl start ssh
+)
+
+if [ $? -ne 0 ]; then
+    echo "Failed to enable or start SSH service. Exiting..."
+    exit 1
+fi
+
+echo "Disabling USB ports and Ethenet ports..."
+sudo uhubctl | awk '/Current status for hub/ {print $5}' | xargs -I {} sudo uhubctl -l {} -p all -a off
 
 for i in {1..5}; do
     echo "Trying to start cage compositor (graphical server) with chromium..."
