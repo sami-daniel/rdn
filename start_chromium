@@ -19,8 +19,8 @@ url="https://ooh.tvsimbrasil.com.br/ooh/current-ads?id=$numeric_part"
 
 sleep 5s
 until ping $url -c 4 > /dev/null 2>&1; do
-    echo "Not connected on internet. Sleeping for 2 seconds..."
-    sleep 2
+    echo "The $url is not available. Sleeping for 20 seconds..."
+    sleep 20
 done
 
 until wlr-randr; do
