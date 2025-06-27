@@ -4,19 +4,30 @@ exec 1> >(logger -s -t "$(basename "$0")") 2>&1
 set -euo pipefail
 trap 'echo "Error at line $LINENO"; exit 1' ERR
 
-sleep 5s
-URL=https://ooh.tvsimbrasil.com.br/ooh/current-ads
-output=$(wlr-randr | head -n1 | cut -d' ' -f1)
+username="$USER"
+if [[ "$username" != *"#"* ]]; then
+    echo "Error: Malformed user name. It should contains '#' and after the numerical identifier."
+    exit 1
+fi
+numeric_part="${username#*#}"
+if ! [[ "$numeric_part" =~ ^[0-9]+$ ]]; then
+    echo "Error: Part after # is not a valid number."
+    exit 2
+fi
 
+url="https://ooh.tvsimbrasil.com.br/ooh/current-ads?id=$numeric_part"
+
+sleep 5s
 until wlr-randr; do
     echo "Waiting for display connection..."
     sleep 1
 done
+output=$(wlr-randr | head -n1 | cut -d' ' -f1)
 wlr-randr --output $output --transform 90 &
 
 sleep 5s
 (
-        chromium --kiosk $URL \
+        chromium --kiosk $url \
         --noerrdialogs \
         --disable-infobars \
         --disable-session-crashed-bubble \
