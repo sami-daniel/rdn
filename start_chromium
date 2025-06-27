@@ -16,9 +16,9 @@ if ! [[ "$numeric_part" =~ ^[0-9]+$ ]]; then
 fi
 
 url="https://ooh.tvsimbrasil.com.br/ooh/current-ads?id=$numeric_part"
-
+base="https://ooh.tvsimbrasil.com.br"
 sleep 5s
-until ping $url -c 4 > /dev/null 2>&1; do
+until curl -I $base -c 4 > /dev/null 2>&1; do
     echo "The $url is not available. Sleeping for 20 seconds..."
     sleep 20
 done
@@ -45,4 +45,5 @@ chromium --kiosk $url \
         --disable-domain-reliability \
         --safebrowsing-disable-auto-update \
         --disable-client-side-phishing-detection \
-        --metrics-recording-only || { echo "Failed on initialization of chromium. Exiting..."; exit 1; }
+        --metrics-recording-only \
+        || { echo "Failed on initialization of chromium. Exiting..."; exit 1; }

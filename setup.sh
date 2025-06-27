@@ -4,14 +4,14 @@ exec 1> >(logger -s -t "$(basename "$0")") 2>&1
 set -euo pipefail
 trap 'echo "Error at line $LINENO"; exit 1' ERR
 
-PKGS=('ca-certificates' xwayland chromium cage 'wlr-randr' grep uhubctl)
+PKGS=('ca-certificates' xwayland chromium cage 'wlr-randr' grep uhubctl curl)
 SERVICE_FOLDER=~/.config/systemd/user/
 prefix=$(pwd)
 
 echo "Setting up system..."
 
-echo "Checking connection. Pinging four times against google.com..."
-ping google.com -c 4 > /dev/null 2>&1 
+echo "Checking connection..."
+curl -I https://google.com > /dev/null 2>&1 \
 || { echo "Connect to internet before running setup.sh. Use sudo raspi-config command."; exit 1; }
 
 echo "Updating packages..."
