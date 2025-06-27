@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# idk if there is some 'delay time' when cage starts, so we put 5s of delay
 sleep 5s
-wlr-randr --output HDMI-A-1 --transform 90 &
-# again
+URL=https://ooh.tvsimbrasil.com.br/ooh/current-ads
+OUTPUT=$(wlr-randr | head -n1 | cut -d' ' -f1)
+wlr-randr --output $OUTPUT --transform 90 &
 sleep 5s
-chromium --kiosk https://ooh.tvsimbrasil.com.br/ooh/current-ads \
+chromium --kiosk $URL \
         --noerrdialogs \
         --disable-infobars \
         --disable-session-crashed-bubble \

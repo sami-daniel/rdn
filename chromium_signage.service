@@ -1,0 +1,11 @@
+[Unit]
+Description=Chromium Signage Service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/start_cage
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

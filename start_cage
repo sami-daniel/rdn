@@ -1,0 +1,8 @@
+#!/bin/bash
+
+while ! ping google.com -c 4 > /dev/null 2>&1; do
+    echo "Not connected on internet. Sleeping for 2 seconds..."
+    sleep 2
+done
+
+cage start_chromium
