@@ -12,7 +12,7 @@ echo "After the internet become connected, the USB ports and Ethernet ports will
 echo "Ensuring ssh is enabled..."
 sudo systemctl enable --now ssh || { echo "Failed on initialization of SSH. Exiting..."; exit 1; }
 
-while ! ping google.com -c 4 > /dev/null 2>&1; do
+until ping google.com -c 4 > /dev/null 2>&1; do
     echo "Not connected on internet. Sleeping for 2 seconds..."
     sleep 2
 done
