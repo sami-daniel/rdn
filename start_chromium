@@ -42,4 +42,4 @@ sleep 5s
         --safebrowsing-disable-auto-update \
         --disable-client-side-phishing-detection \
         --metrics-recording-only
-) || || { echo "Failed on initialization of chromium. Exiting..."; exit 1; }
+) || { echo "Failed on initialization of chromium. Exiting..."; exit 1; }
