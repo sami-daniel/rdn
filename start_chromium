@@ -5,13 +5,13 @@ set -euo pipefail
 trap 'echo "Error at line $LINENO"; exit 1' ERR
 
 username="$USER"
-if [[ "$username" != *"_"* ]]; then
-    echo "Error: Malformed user name. It should contains '_' and after the numerical identifier."
+if [[ "$username" != *"-"* ]]; then
+    echo "Error: Malformed user name. It should contains '-' and after the numerical identifier."
     exit 1
 fi
-numeric_part="${username#*_}"
+numeric_part="${username#*-}"
 if ! [[ "$numeric_part" =~ ^[0-9]+$ ]]; then
-    echo "Error: Part after '_' is not a valid number."
+    echo "Error: Part after '-' is not a valid number."
     exit 2
 fi
 
