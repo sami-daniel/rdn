@@ -27,6 +27,7 @@ wlr-randr --output $output --transform 90 &
 
 sleep 5s
 (
+        set -e
         chromium --kiosk $url \
         --noerrdialogs \
         --disable-infobars \
