@@ -20,6 +20,7 @@ done
 # TODO: Awk parse is fragile, but I'm not sure if all usb ports are the same on PI 3b
 echo "Disabling USB ports and Ethenet ports..."
 (
+    set -e
     sudo uhubctl | awk '/Current status for hub/ {print $5}' | xargs -I {} sudo uhubctl -l {} -p all -a off
 ) || { echo "Failed on disabling USB and Ethernet ports..."; exit 1; }
 

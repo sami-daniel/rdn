@@ -11,23 +11,20 @@ prefix=$(pwd)
 echo "Setting up system..."
 
 echo "Checking connection. Pinging four times against google.com..."
-ping google.com -c 4 > /dev/null 2>&1
-
-if [ $? -ne 0 ]; then
-    echo "Connect to internet before running setup.sh. Use sudo raspi-config command."
-    exit 1
-fi
+ping google.com -c 4 > /dev/null 2>&1 
+|| { echo "Connect to internet before running setup.sh. Use sudo raspi-config command."; exit 1; }
 
 echo "Updating packages..."
 (
 set -e
 sudo apt-get update
 sudo apt-get full-upgrade -y
-) > /dev/null
+) || { echo "Failed on update packages. Exiting..."; exit 1; }
 
 echo "Installing required packages for system..."
 (
-sudo apt-get install --reinstall openssh-client openssh-server
+set -e
+sudo apt-get install --reinstall openssh-client openssh-server &&
 sudo apt-get install -y "${PKGS[@]}"
 ) || { echo "Failed on installation of nescessary packages. Exiting..."; exit 1; }
 
