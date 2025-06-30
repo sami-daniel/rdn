@@ -2,6 +2,7 @@
 
 while true; do
     if curl -I curl -I https://google.com; then
+        sleep 10
         continue
     else
         nmcli device disconnect wlan0

@@ -1,5 +1,5 @@
 [Unit]
-Description=Meu Serviço Personalizado
+Description=Ensure connection service
 After=network.target
 
 [Service]
