@@ -8,6 +8,7 @@ PWD=$2
 PREFIX=$(pwd)
 
 sudo apt-get install --no-install-recommends network-manager
+|| { echo "Failed to install network-manager"; exit 1; }
 
 if [ -z "$SSID" ] || [ -z "$PWD" ]; then
     echo "Use: command <SSID> <PASSWORD>" 1>&2

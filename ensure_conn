@@ -7,7 +7,7 @@ INTERFACE="wlan0"
 CHECK_URL="https://www.google.com"
 
 while true; do
-    if curl -I "$CHECK_URL" > /dev/null; then
+    if curl -I "$CHECK_URL" > /dev/null 2>&1; then
         echo "Connected successfully with $CHECK_URL"
         sleep 30
     else
