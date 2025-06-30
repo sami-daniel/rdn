@@ -1,0 +1,12 @@
+#!/bin/bash
+
+while true; do
+    if curl -I curl -I https://google.com; then
+        continue
+    else
+        nmcli device disconnect wlan0
+        sleep 5
+        nmcli device connect wlan0
+        sleep 5
+    fi
+fi

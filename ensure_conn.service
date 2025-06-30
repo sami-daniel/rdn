@@ -1,0 +1,11 @@
+[Unit]
+Description=Meu Serviço Personalizado
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/ensure_conn
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
