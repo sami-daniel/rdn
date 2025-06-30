@@ -7,7 +7,7 @@ SSID=$1
 PWD=$2
 PREFIX=$(pwd)
 
-sudo apt install --no-install-recommends network-manager
+sudo apt-get install --no-install-recommends network-manager
 
 if [ -z "$SSID" ] || [ -z "$PWD" ]; then
     echo "Use: command <SSID> <PASSWORD>" 1>&2
