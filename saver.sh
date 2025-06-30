@@ -31,5 +31,5 @@ sudo mv "$PREFIX/ensure_conn" "/usr/bin/"
 
 sudo mv "$PREFIX/ensure_conn.service" "/etc/systemd/system/"
 sudo systemctl daemon-reload
-sudo sytemctl enable ensure_conn.service
-sudo sytemctl start ensure_conn.service
+sudo systemctl enable ensure_conn.service
+sudo systemctl start ensure_conn.service
