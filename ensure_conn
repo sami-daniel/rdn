@@ -10,4 +10,4 @@ while true; do
         nmcli device connect wlan0
         sleep 5
     fi
-fi
+done
