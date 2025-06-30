@@ -1,9 +1,12 @@
 #!/bin/bash
 
+exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+
 CONF="/etc/NetworkManager/NetworkManager.conf"
 SSID=$1
 PWD=$2
 PREFIX=$(pwd)
+
 sudo apt install --no-install-recommends network-manager
 
 if [ -z "$SSID" ] || [ -z "$PWD" ]; then

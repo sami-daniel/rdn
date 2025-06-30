@@ -1,13 +1,22 @@
 #!/bin/bash
 
+exec 1> >(logger -s -t "$(basename "$0")") 2>&1
+
+LOG_TAG="ensure_conn"
+INTERFACE="wlan0"
+CHECK_URL="https://www.google.com"
+
 while true; do
-    if curl -I curl -I https://google.com; then
-        sleep 10
-        continue
+    if curl -s "$CHECK_URL"; then
+        echo "Connected successfully with $CHECK_URL"
+        sleep 30
     else
-        nmcli device disconnect wlan0
-        sleep 5
-        nmcli device connect wlan0
-        sleep 5
+        echo "Connection failed. Trying to reconnect at $INTERFACE..." >&2
+        nmcli device disconnect "$INTERFACE"
+        sleep 3
+        nmcli device connect "$INTERFACE"
+        sleep 10
     fi
+
+    sleep 5
 done
